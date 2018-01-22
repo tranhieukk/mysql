@@ -1,0 +1,227 @@
+Xử lý về thời gian trong MySQL
+
+
+Xử lý về thời gian trong MySQL
+
+MySQL hỗ trợ các bảng CSDL chứa các cột với các kiểu dữ liệu khác nhau, trong đó có các kiểu dữ liệu về ngày và thời gian.
+
+MySQL cung cấp kiểu dữ liệu ngày, thời gian và tổ hợp ngày – thời gian. Ngoài ra MySQL cũng cung cấp kiểu dữ liệu timestamp để lưu thời gian thay đổi của bản ghi.
+
+Các kiểu dữ liệu
+
+Mô tả
+
+DATE
+
+Giá trị ngày trong định dạng ‘yyyy-mm-dd’
+TIME
+
+Giá trị thời gian trong định dạng ‘hh:mm:ss’
+
+DATETIME
+
+Giá trị ngày tháng và thời gian trong định dạng ‘yyyy-mm-dd hh:mm:ss’
+
+TIMESTAMP	
+Giá trị nhãn thời gian trong định dạng ‘yyyy-mm-dd hh:mm:ss’
+
+Dữ liệu có kiểu TIMESTAMP đóng vai trò đặc biệt do được tự động cập nhật giá trị thời gian thay đổi gần nhất khi bản ghi được thêm vào hoặc cập nhật.
+
+Một số hàm xử lý thời gian trong MySQL
+
+ 
+
+Hàm
+
+Nội dung	
+Ví dụ
+
+NOW()	
+Trả về ngày hiện tại dạng yyyy-mm-dd hh:mm:ss
+
+SELECT NOW();
+kết quả: 2015-07-22 17:55:33
+
+CURDATE()	
+Trả về ngày hiện tại dạng yyyy-mm-dd
+
+SELECT CURDATE();
+kết quả: 2015-07-22
+
+YEAR()	
+Xác định năm từ một ngày cho trước
+
+SELECT YEAR(“2015-07-22 17:56:33”);
+kết quả: 2015
+
+MONTH()	
+Xác định tháng (1-12) từ một ngày cho trước
+
+SELECT MONTH(“2015-07-22 17:56:33”);
+kết quả: 7
+
+MONTHNAME()	
+Xác định tháng (January-December) từ một ngày cho trước
+
+ SELECT MONTH(“2015-07-22 17:57:09”);
+kết quả: July
+
+WEEKOFYEAR()	
+Thứ tự của tuần trong năm
+
+SELECT WEEKOFYEAR(“2015-07-22”);
+kết quả: 30
+
+WEEKDAY()	
+Số thứ tự của ngày trong tuần(0 = Monday, 6 = Sunday)
+
+SELECT WEEKDAY(”2015-07-22 17:57:09”);
+kết quả: 2 (tương đương thứ 4)
+
+DATE()	
+Xác định chính ngày từ 1 biểu thức ngày
+
+SELECT DATE(”2015-07-22 17:57:09”);
+-> 2015-07-22
+
+DATEDIFF(expr1,expr2)	
+Tính số ngày giữa 2 ngày expr1 và expr2, nếu số ngày >0 nghĩa là expr1>expr2 và ngược lại
+
+SELECT DATEDIFF(“2015-07-21”,” 2015-07-22”);
+-> -1
+SELECT DATEDIFF(“2016-07-22”,”2015-07-22”);
+-> 366
+
+DAY()
+
+Trả về ngày từ biểu thức ngày
+
+SELECT DAY(“2015-07-22”);
+-> 22
+
+DAYNAME()
+
+Xác định ngày (Sunday-Saturday) từ một ngày cho trước
+
+SELECT DAYNAME(“2015-07-22”);
+-> Wednesday
+
+DAYOFMONTH(date)	
+Ngày trong tháng 0-31
+
+SELECT DAYOFMONTH(“2015-07-22”);
+-> 22
+
+DAYOFWEEK(date)	
+Ngày trong tuần (1=Sunday, 2 = Monday, …, 7 = Saturday)
+
+ SELECT DAYOFWEEK(“2015-07-22”);
+-> 4
+
+DAYOFYEAR(date)	
+Ngày trong năm (1-366)
+
+SELECT DAYOFYEAR(“2015-07-22”);
+-> 203
+
+FROM_DAYS(N)
+
+Trả về dạng DATE từ một số nguyên N.	SELECT FROM_DAYS(736000);
+-> 2015-02-06
+Cộng thêm vào ngày cho trước(date)
+DATE_ADD(date,INTERVAL expr unit);
+ADDDATE(date,INTERVAL expr unit);
+
+Trừ đi so với ngày cho trước(date)
+DATE_SUB(date,INTERVAL expr unit);
+SUBDATE(date,INTERVAL expr unit)
+
+Trong đó unit bao gồm các giá trị:
+
+MICROSECOND
+SECOND
+MINUTE
+HOUR
+DAY
+WEEK
+MONTH
+QUARTER
+YEAR
+SECOND_MICROSECOND
+MINUTE_MICROSECOND
+MINUTE_SECOND
+HOUR_MICROSECOND
+HOUR_SECOND
+HOUR_MINUTE
+DAY_MICROSECOND
+DAY_SECOND
+DAY_MINUTE
+DAY_HOUR
+YEAR_MONTH
+
+SELECT DATE_ADD(“2015-07-22 20:46:05”,INTERVAL 1 SECOND);
+-> 2015-07-22 20:46:06
+
+SELECT DATE_ADD(“2015-07-22 20:46:05”,INTERVAL 1 QUARTER);
+-> 2015-10-22 20:46:05
+
+SELECT DATE_ADD(“2015-07-22 20:46:05”,INTERVAL 1 SECOND_MICROSECOND);
+-> 2015-07-22 20:46:05.100000
+
+SELECT DATE_ADD(“2015-07-22 20:46:05”,INTERVAL 1 MINUTE_MICROSECOND);
+-> 2015-07-22 20:46:05.100000
+
+SELECT DATE_SUB(“2015-07-22 20:46:05”,INTERVAL 1 DAY_MINUTE);
+-> 2015-07-22 20:45:05
+
+SELECT SUBDATE(“2015-07-22 20:46:05”,INTERVAL 1 DAY_HOUR);
+-> 2015-10-22 19:46:05
+
+EXTRACT(unit FROM date):  lấy đơn vị thời gian unit từ ngày date, với unit có các giá trị như bảng trên
+Ví dụ:
+SELECT EXTRACT(YEAR FROM “2015-07-22 20:46:05”);
+-> 2015
+SELECT EXTRACT(YEAR_MONTH FROM “2015-07-22 20:46:05”);
+-> 201507
+SELECT EXTRACT(DAY_MINUTE FROM “2015-07-22 20:46:05”);
+-> 222046
+
+ 
+
+DATE_FORMAT(date): định dạng lại ngày trong mysql theo định dạng của format
+ví dụ:
+SELECT DATE_FORMAT(‘2015-07-22 20:46:05’, ‘%W %M %Y’);
+-> Wednesday July 2015
+Các giá trị của format
+%a : Sun,..,Sat
+%b : Jan,..,Dec)
+%c : Month, 0..12
+%D : ngày 0th, 1st, 2nd, 3rd, …
+%d : ngày 00..31
+%e : ngày 0..31
+%f : micro giây 000000..999999
+%H : giờ (00..23)
+%h : giờ (01..12)
+%I : giờ (01..12)
+%i : Phút (00..59)
+%j : Ngày trong năm (001..366)
+%k : giờ (0..23)
+%l : giờ (1..12)
+%M : Tháng(January..December)
+%m : Tháng (00..12)
+%p : AM hoặc PM
+%r : Time, 12-hour (hh:mm:ss kiểu AM hoặc PM)
+%S : Seconds (00..59)
+%s : Seconds (00..59)
+%T : Time, 24-hour (hh:mm:ss)
+%U : Week (00..53), tuần bắt đầu bằng ngày Chủ Nhật
+%u : Week (00..53), tuần bắt đầu bằng ngày Chủ Nhật,dùng với %X
+%v : Week (01..53), tuần bắt đầu bằng ngày Thứ Hai,dùng với %x
+%W : ngày trong tuần (Sunday..Saturday)
+%w : ngày trong tuần (0=Sunday..6=Saturday)
+%X : Năm có tuần bắt đầu bằng ngày Chủ Nhật, có bốn chữ số, sử dụng kèm với %V
+%x : Năm có tuần bắt đầu bằng ngày Thứ Hai, có bốn chữ số, sử dụng kèm với  %v
+%Y : năm (4 ký tự)
+%y : năm (2 ký tự: 2 số cuối)
+%% : A literal ‘%’ character
+%x : x, for any ‘x’ not listed above
